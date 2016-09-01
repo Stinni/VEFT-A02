@@ -39,7 +39,10 @@
       "type": "build"
     },
     "Models": {
-      "target": "project" 
+      "target": "project"
+    },
+    "Services": {
+      "target": "project"
     } 
   },
 
