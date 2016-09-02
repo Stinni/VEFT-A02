@@ -112,6 +112,6 @@
   },
 
   "tooling": {
-    "defaultNamespace": "WebApplication"
+    "defaultNamespace": "A02.API"
   }
 }

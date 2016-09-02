@@ -1,7 +1,10 @@
 @using System.Collections.Generic
+@using System.Threading.Tasks
+@using A02.API.Models
+@using A02.API.Models.AccountViewModels
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Http.Authentication
-@model LoginViewModel
+@model A02.API.Models.AccountViewModels.LoginViewModel
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{

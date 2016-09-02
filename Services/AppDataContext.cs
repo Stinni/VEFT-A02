@@ -1,12 +1,13 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using A02.API.Models;
+using A02.Entities;
 
-namespace A02.API.Data
+namespace A02.Services
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class AppDataContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public DbSet<Course> Courses { get; set; }
+
+        public AppDataContext(DbContextOptions<AppDataContext> options)
             : base(options)
         {
         }

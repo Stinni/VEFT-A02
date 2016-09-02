@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -8,11 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using WebApplication.Models;
-using WebApplication.Models.AccountViewModels;
-using WebApplication.Services;
+using A02.API.Models;
+using A02.API.Models.AccountViewModels;
+using A02.API.Services;
 
-namespace WebApplication.Controllers
+namespace A02.API.Controllers
 {
     [Authorize]
     public class AccountController : Controller

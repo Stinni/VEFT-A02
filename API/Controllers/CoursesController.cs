@@ -1,19 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using A02.Models;
+using A02.Services;
 
 namespace A02.API.Controllers
 {
     [Route("api/courses")]
     public class CoursesController
     {
+        private readonly ICoursesService _service;
+
+        public CoursesController(ICoursesService service)
+        {
+            _service = service;
+        }
+
         [HttpGet]
         public List<CourseLiteDTO> GetCoursesOnSemester(string semester = null)
         {
-            return new List<CourseLiteDTO>
+            return _service.GetCoursesBySemester(semester);
+            /*return new List<CourseLiteDTO>
             {
                 new CourseLiteDTO
                 {
@@ -21,7 +27,7 @@ namespace A02.API.Controllers
                     Name = "Web Services",
                     Semester = "20163"
                 }
-            };
+            };*/
         }
     }
 }
