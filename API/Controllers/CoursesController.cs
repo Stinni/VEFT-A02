@@ -18,8 +18,8 @@ namespace A02.API.Controllers
         [HttpGet]
         public List<CourseLiteDTO> GetCoursesOnSemester(string semester = null)
         {
-            return _service.GetCoursesBySemester(semester);
-            /*return new List<CourseLiteDTO>
+            //return _service.GetCoursesBySemester(semester);
+            return new List<CourseLiteDTO>
             {
                 new CourseLiteDTO
                 {
@@ -27,7 +27,7 @@ namespace A02.API.Controllers
                     Name = "Web Services",
                     Semester = "20163"
                 }
-            };*/
+            };
         }
 
         // GET api/courses/5
