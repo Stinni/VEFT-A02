@@ -53,10 +53,6 @@ namespace A02.API
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseApplicationInsightsRequestTelemetry();
-
-            app.UseApplicationInsightsExceptionTelemetry();
-
             app.UseMvc();
         }
     }
