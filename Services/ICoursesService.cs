@@ -9,5 +9,7 @@ namespace A02.Services
     public interface ICoursesService
     {
         List<CourseLiteDTO> GetCoursesBySemester(string semester);
+
+        CourseLiteDTO GetCourseById(int id);
     }
 }
