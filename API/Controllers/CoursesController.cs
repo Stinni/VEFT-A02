@@ -1,11 +1,9 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
-using A02.Models;
+﻿using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
+
+using A02.Models.ViewModels;
 using A02.Services;
 using A02.Services.Exceptions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Models.ViewModels;
 
 namespace A02.API.Controllers
 {
@@ -106,9 +104,6 @@ namespace A02.API.Controllers
             }
         }
 
-        /*
-         *  Should add a new student to T-514-VEFT in 20163. It is assumed that the request body contains the SSN of the student
-         */
         // POST /api/courses/2/students
         [HttpPost]
         [Route("{id}/students", Name = "GetAllStudentsInCourse")]
@@ -116,15 +111,19 @@ namespace A02.API.Controllers
         {
             var ssn = model.StudentSSN;
             var rgx = new Regex("^\\d{10}$");
-            if (ssn == null || rgx.IsMatch(ssn)) return new BadRequestResult();
+            if (ssn == null || !rgx.IsMatch(ssn)) return new BadRequestResult();
             try
             {
                 _service.AddStudentToCourse(id, ssn);
-                return new OkObjectResult(students);
+                return new NoContentResult();
             }
             catch (AppObjectNotFoundException)
             {
                 return new NotFoundResult();
+            }
+            catch (AppObjectExistsException)
+            {
+                return new BadRequestResult();
             }
         }
     }

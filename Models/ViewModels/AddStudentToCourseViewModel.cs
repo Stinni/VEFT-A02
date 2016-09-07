@@ -1,4 +1,4 @@
-﻿namespace Models.ViewModels
+﻿namespace A02.Models.ViewModels
 {
     public class AddStudentToCourseViewModel
     {

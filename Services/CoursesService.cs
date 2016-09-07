@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using A02.Entities;
 using A02.Models;
 using A02.Services.Exceptions;
 
@@ -113,7 +114,28 @@ namespace A02.Services
 
         public void AddStudentToCourse(int cId, string sId)
         {
-            
+            var course = (from c in _db.Courses
+                          where c.Id == cId
+                          select c).SingleOrDefault();
+            if(course == null) throw new AppObjectNotFoundException();
+
+            var student = (from s in _db.Students
+                           where s.SSN == sId
+                           select s).SingleOrDefault();
+            if(student == null) throw new AppObjectNotFoundException();
+
+            var connection = (from con in _db.StudentConnections
+                              where con.CourseId == cId && con.StudentId == sId
+                              select con).SingleOrDefault();
+            if(connection != null) throw new AppObjectExistsException();
+
+            var tmpCon = new StudentConnection
+            {
+                CourseId = cId,
+                StudentId = sId
+            };
+            _db.StudentConnections.Add(tmpCon);
+            _db.SaveChanges();
         }
 
         public void RemoveStudentFromCourse(int cId, string sId)

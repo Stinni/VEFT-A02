@@ -1,4 +1,4 @@
-﻿namespace A02.Models
+﻿namespace A02.Models.ViewModels
 {
     /// <summary>
     /// Used to store info for updating a course's start and end dates
