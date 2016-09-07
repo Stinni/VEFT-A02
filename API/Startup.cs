@@ -45,7 +45,6 @@ namespace A02.API
 
             // Add application services.
             services.AddTransient<ICoursesService, CoursesService>();
-            services.AddTransient<IStudentsService, StudentsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
