@@ -7,10 +7,12 @@ namespace A02.API.Controllers
     public class CoursesController
     {
         private readonly ICoursesService _service;
+        private readonly IStudentsService _sservice;
 
-        public CoursesController(ICoursesService service)
+        public CoursesController(ICoursesService service, IStudentsService sservice)
         {
             _service = service;
+            _sservice = sservice;
         }
 
         // GET api/courses/
@@ -45,6 +47,18 @@ namespace A02.API.Controllers
             return new OkObjectResult(course);
         }
 
+        // TODO: DELETE THIS!!! <- Just messing and trying it out :)
+        [HttpGet]
+        [Route("students/", Name = "GetStudents")]
+        public IActionResult GetStudents()
+        {
+            var list = _sservice.GetStudentsInCourse(1);
+            if (list == null)
+            {
+                return new NotFoundResult();
+            }
+            return new OkObjectResult(list);
+        }
         // PUT api/courses/5
         /*[HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)

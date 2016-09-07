@@ -7,6 +7,8 @@ namespace A02.Services
     {
         public DbSet<Course> Courses { get; set; }
 
+        public DbSet<Student> Students { get; set; }
+
         public AppDataContext(DbContextOptions<AppDataContext> options)
             : base(options)
         {
