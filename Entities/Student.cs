@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace A02.Entities
+﻿namespace A02.Entities
 {
     public class Student
     {
+        public int Id { get; set; }
         public string SSN { get; set; }
-
         public string Name { get; set; }
     }
 }

@@ -18,26 +18,35 @@ namespace A02.Services
 
         public List<CourseLiteDTO> GetCoursesBySemester(string semester)
         {
-            var list = (from x in _db.Courses
-                        where x.Semester == semester
+            if (string.IsNullOrEmpty(semester))
+            {
+                semester = "20163"; // Current semester hardcoded
+            }
+
+            var list = (from c in _db.Courses
+                        join ct in _db.CourseTemplates
+                        on c.TemplateId equals ct.CourseId
+                        where c.Semester == semester
                         select new CourseLiteDTO
                         {
-                            ID = x.ID,
-                            Name = x.Name,
-                            Semester = x.Semester
+                            Id = c.Id,
+                            Name = ct.Name,
+                            Semester = c.Semester
                         }).ToList();
             return !list.Any() ? null : list;
         }
 
         public CourseLiteDTO GetCourseById(int id)
         {
-            var course = (from x in _db.Courses
-                          where x.ID == id
+            var course = (from c in _db.Courses
+                          join ct in _db.CourseTemplates
+                          on c.TemplateId equals ct.CourseId
+                          where c.Id == id
                           select new CourseLiteDTO
                           {
-                              ID = x.ID,
-                              Name = x.Name,
-                              Semester = x.Semester
+                              Id = c.Id,
+                              Name = ct.Name,
+                              Semester = c.Semester
                           }).SingleOrDefault();
             return course;
         }

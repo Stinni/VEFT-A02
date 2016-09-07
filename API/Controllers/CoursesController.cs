@@ -20,12 +20,7 @@ namespace A02.API.Controllers
         [HttpGet]
         public IActionResult GetCoursesOnSemester(string semester)
         {
-            var tmp = semester;
-            if (string.IsNullOrEmpty(tmp))
-            {
-                tmp = "20163"; // Current semester hardcoded
-            }
-            var list = _service.GetCoursesBySemester(tmp);
+            var list = _service.GetCoursesBySemester(semester);
             if (list == null)
             {
                 return new NotFoundResult();
@@ -36,8 +31,8 @@ namespace A02.API.Controllers
         // GET api/courses/1
         // Should return a more detailed object describing T-514-VEFT, taught in 20153 (see above in test data definition)
         [HttpGet]
-        [Route("{id}", Name = "GetCourseByID")]
-        public IActionResult GetCourseByID(int id)
+        [Route("{id}", Name = "GetCourseById")]
+        public IActionResult GetCourseById(int id)
         {
             var course = _service.GetCourseById(id);
             if (course == null)

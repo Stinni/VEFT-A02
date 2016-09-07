@@ -28,7 +28,7 @@ namespace A02.Services
             return !list.Any() ? null : list;
         }
 
-        public StudentLiteDTO GetStudentBySSN(string SSN)
+        public StudentLiteDTO GetStudentBySSN(string ssn)
         {
             return null;
         }

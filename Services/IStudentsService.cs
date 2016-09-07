@@ -10,6 +10,6 @@ namespace A02.Services
     {
         List<StudentLiteDTO> GetStudentsInCourse(int id);
 
-        StudentLiteDTO GetStudentBySSN(string SSN);
+        StudentLiteDTO GetStudentBySSN(string ssn);
     }
 }
