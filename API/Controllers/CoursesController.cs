@@ -7,18 +7,31 @@ using A02.Services.Exceptions;
 
 namespace A02.API.Controllers
 {
+    /// <summary>
+    /// The controller for "api/courses" route
+    /// Used for anything related to the Courses.db database
+    /// Getting data about courses, students in courses, adding students to courses
+    /// and even deleting courses
+    /// </summary>
     [Route("api/courses")]
     public class CoursesController
     {
         private readonly ICoursesService _service;
 
+        /// <summary>
+        /// The CoursesController Constructor
+        /// </summary>
+        /// <param name="service">The service being used for database access</param>
         public CoursesController(ICoursesService service)
         {
             _service = service;
         }
 
-        // GET api/courses/
-        // GET api/courses?semester=20163
+        /// <summary>
+        /// GET method for the "api/courses/" and "api/courses?semester={semester}" routes
+        /// Sends a list of all courses being taught at a certain semester
+        /// </summary>
+        /// <param name="semester">Optional search paramater, if empty, 20163 is used</param>
         [HttpGet]
         public IActionResult GetCoursesOnSemester(string semester)
         {
@@ -33,8 +46,11 @@ namespace A02.API.Controllers
             }
         }
 
-        // GET api/courses/1
-        // Should return a more detailed object describing T-514-VEFT, taught in 20153 (see above in test data definition)
+        /// <summary>
+        /// GET method for the "api/courses/{id}" route
+        /// Sends detailed info about a course with 'id' as it's Id
+        /// </summary>
+        /// <param name="id">The Id of the course being enquired about</param>
         [HttpGet]
         [Route("{id}", Name = "GetCourseById")]
         public IActionResult GetCourseById(int id)
@@ -50,7 +66,12 @@ namespace A02.API.Controllers
             }
         }
 
-        // PUT api/courses/5
+        /// <summary>
+        /// PUT method for the "api/courses/{id}" route
+        /// Updates the StartDate and EndDate for the course with 'id' as it's Id
+        /// </summary>
+        /// <param name="id">The Id of the course being updated</param>
+        /// <param name="model">Model with two attributes, StartDate and EndDate as strings</param>
         [HttpPut("{id}")]
         public IActionResult UpdateCourseDates(int id, [FromBody]UpdateCourseViewModel model)
         {
@@ -73,7 +94,12 @@ namespace A02.API.Controllers
             }
         }
 
-        // DELETE api/courses/5
+        /// <summary>
+        /// DELETE method for the "api/courses/{id}" route
+        /// Deletes all connections/enrollments of students to a course with
+        /// 'id' as it's Id and then deletes the course itself
+        /// </summary>
+        /// <param name="id">The Id of the course being deleted</param>
         [HttpDelete("{id}")]
         public IActionResult DeleteCourse(int id)
         {
@@ -88,7 +114,11 @@ namespace A02.API.Controllers
             }
         }
 
-        // GET /api/courses/1/students
+        /// <summary>
+        /// GET method for the "/api/courses/{id}/students" route
+        /// Sends a list of all students in a course with 'id' as it's Id
+        /// </summary>
+        /// <param name="id">The Id of the course being enquired about</param>
         [HttpGet]
         [Route("{id}/students", Name = "GetAllStudentsInCourse")]
         public IActionResult GetAllStudentsInCourse(int id)
@@ -104,12 +134,19 @@ namespace A02.API.Controllers
             }
         }
 
-        // POST /api/courses/2/students
+        /// <summary>
+        /// POST method for the "/api/courses/{id}/students" route
+        /// Checks if the Student's SSN is valid and adds that student to
+        /// a course with 'id' as it's Id
+        /// </summary>
+        /// <param name="id">The Id of the course that the student's enrolled in</param>
+        /// <param name="model">Model with one attribute, the student's SSN named StudentSSN</param>
         [HttpPost]
         [Route("{id}/students", Name = "GetAllStudentsInCourse")]
         public IActionResult AddStudentToACourse(int id, [FromBody]AddStudentToCourseViewModel model)
         {
             var ssn = model.StudentSSN;
+            // Same idea here with the regex as in the 'UpdateCourseDates' function
             var rgx = new Regex("^\\d{10}$");
             if (ssn == null || !rgx.IsMatch(ssn)) return new BadRequestResult();
             try

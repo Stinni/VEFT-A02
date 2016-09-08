@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using A02.Entities;
 using A02.Models;
@@ -8,7 +7,8 @@ using A02.Services.Exceptions;
 namespace A02.Services
 {
     /// <summary>
-    /// 
+    /// A service to connect to the database being used
+    /// Takes care of all the needed queries to the database
     /// </summary>
     public class CoursesService : ICoursesService
     {
@@ -19,6 +19,14 @@ namespace A02.Services
             _db = db;
         }
 
+        /// <summary>
+        /// Searches for a certain semester (current one if none given)
+        /// and returns either a list of courses being taught that semester
+        /// or throws an AppObjectNotFoundException if none are found.
+        /// </summary>
+        /// <param name="semester">An empty string or a certain semester</param>
+        /// <returns>A list of CourseLiteDTO models</returns>
+        /// <throws>AppObjectNotFoundException</throws>
         public List<CourseLiteDTO> GetCoursesBySemester(string semester)
         {
             if (string.IsNullOrEmpty(semester))
@@ -44,6 +52,14 @@ namespace A02.Services
             return list;
         }
 
+        /// <summary>
+        /// Searches for a course with 'id' as it's Id and returns either a
+        /// CourseLiteDTO object with that course's info or throws an
+        /// AppObjectNotFoundException if no course with that 'id' is found
+        /// </summary>
+        /// <param name="id">An Id of a course</param>
+        /// <returns>A CourseLiteDTO model</returns>
+        /// <throws>AppObjectNotFoundException</throws>
         public CourseLiteDTO GetCourseById(int id)
         {
             var course = (from c in _db.Courses
@@ -61,6 +77,15 @@ namespace A02.Services
             return course;
         }
 
+        /// <summary>
+        /// Updates the only mutable attributes (StartDate and EndDate) of
+        /// a course with 'id' as it's Id. Throws an AppObjectNotFoundException
+        /// if a course isn't found.
+        /// </summary>
+        /// <param name="id">The course's Id</param>
+        /// <param name="sDate">The course's new starting date</param>
+        /// <param name="eDate">The course's new end date</param>
+        /// <throws>AppObjectNotFoundException</throws>
         public void UpdateCourseDates(int id, string sDate, string eDate)
         {
             var course = (from c in _db.Courses
@@ -77,6 +102,13 @@ namespace A02.Services
             _db.SaveChanges();
         }
 
+        /// <summary>
+        /// Checks if any students are enrolled in a course and removes
+        /// their connections before removing the course from the database.
+        /// Throws an AppObjectNotFoundException if a course with 'id' as it's Id
+        /// </summary>
+        /// <param name="id">The course's Id</param>
+        /// <throws>AppObjectNotFoundException</throws>
         public void DeleteCourse(int id)
         {
             var course = (from c in _db.Courses
@@ -98,6 +130,15 @@ namespace A02.Services
             _db.SaveChanges();
         }
 
+        /// <summary>
+        /// Sends a list of StudentLiteDTO's to the api if any student's are
+        /// enrolled in the course and if a course exists with 'id' as it's Id.
+        /// If no course or student's are found, an AppObjectNotFoundException
+        /// is thrown.
+        /// </summary>
+        /// <param name="id">The course's Id</param>
+        /// <returns>A list of StudentLiteDTO models</returns>
+        /// <throws>AppObjectNotFoundException</throws>
         public List<StudentLiteDTO> GetAllStudentsInCourse(int id)
         {
             var students = (from s in _db.Students
@@ -112,6 +153,18 @@ namespace A02.Services
             return students;
         }
 
+        /// <summary>
+        /// First checks if either the student or the course exists and throws
+        /// and AppObjectNotFoundException they don't. Then checks if there's
+        /// already a connection between them. If so, an AppObjectExistsException
+        /// is thrown.
+        /// If all checks are passed, a connection is made between the course and
+        /// the student and (s)he's enrolled in that course.
+        /// </summary>
+        /// <param name="cId">The course's Id</param>
+        /// <param name="sId">The student's SSN</param>
+        /// <throws>AppObjectNotFoundException</throws>
+        /// <throws>AppObjectExistsException</throws>
         public void AddStudentToCourse(int cId, string sId)
         {
             var course = (from c in _db.Courses
@@ -138,6 +191,15 @@ namespace A02.Services
             _db.SaveChanges();
         }
 
+        /// <summary>
+        /// If a student with 'sId' as SSN isn't connected to a course
+        /// with 'cId' as its Id then an AppObjectNotFoundException is
+        /// thrown. Else the connection is deleted and the student is
+        /// taking that course anymore.
+        /// </summary>
+        /// <param name="cId">The course's Id</param>
+        /// <param name="sId">The student's SSN</param>
+        /// <throws>AppObjectNotFoundException</throws>
         public void RemoveStudentFromCourse(int cId, string sId)
         {
             var connection = (from con in _db.StudentConnections

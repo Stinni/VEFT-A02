@@ -10,12 +10,12 @@
     public class UpdateCourseViewModel
     {
         /// <summary>
-        /// 
+        /// The course's start date
         /// </summary>
         public string StartDate { get; set; }
 
         /// <summary>
-        /// 
+        /// The course's end date
         /// </summary>
         public string EndDate { get; set; }
     }

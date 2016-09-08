@@ -4,7 +4,7 @@ using A02.Models;
 namespace A02.Services
 {
     /// <summary>
-    /// 
+    /// Comments/Documentation in the CoursesService class
     /// </summary>
     public interface ICoursesService
     {
