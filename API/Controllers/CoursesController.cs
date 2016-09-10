@@ -120,7 +120,7 @@ namespace A02.API.Controllers
         /// <param name="id">The Id of the course that the student's enrolled in</param>
         /// <param name="model">Model with one attribute, the student's SSN named StudentSSN</param>
         [HttpPost]
-        [Route("{id}/students", Name = "GetAllStudentsInCourse")]
+        [Route("{id}/students", Name = "AddStudentToACourse")]
         public IActionResult AddStudentToACourse(int id, [FromBody]AddStudentToCourseViewModel model)
         {
             if (!ModelState.IsValid) return new BadRequestResult();

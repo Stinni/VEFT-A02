@@ -3,6 +3,9 @@ using System.Linq;
 using A02.Entities;
 using A02.Models;
 using A02.Services.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace A02.Services
 {
@@ -154,12 +157,13 @@ namespace A02.Services
         }
 
         /// <summary>
-        /// First checks if either the student or the course exists and throws
-        /// and AppObjectNotFoundException they don't. Then checks if there's
-        /// already a connection between them. If so, an AppObjectExistsException
-        /// is thrown.
-        /// If all checks are passed, a connection is made between the course and
-        /// the student and (s)he's enrolled in that course.
+        /// Tries to add a student to a course. If either one or neither exist, or if
+        /// a connection already exists, the database throws a DbUpdateException.
+        /// That exception is used to figure out what went wrong and then an
+        /// AppObjectNotFoundException or an AppObjectExistsException is thrown.
+        /// 
+        /// If no DbUpdateException is thrown, a connection has made between the course
+        /// and the student and (s)he's now enrolled in that course.
         /// </summary>
         /// <param name="cId">The course's Id</param>
         /// <param name="sId">The student's SSN</param>
@@ -167,28 +171,31 @@ namespace A02.Services
         /// <throws>AppObjectExistsException</throws>
         public void AddStudentToCourse(int cId, string sId)
         {
-            var course = (from c in _db.Courses
-                          where c.Id == cId
-                          select c).SingleOrDefault();
-            if(course == null) throw new AppObjectNotFoundException();
-
-            var student = (from s in _db.Students
-                           where s.SSN == sId
-                           select s).SingleOrDefault();
-            if(student == null) throw new AppObjectNotFoundException();
-
-            var connection = (from con in _db.StudentConnections
-                              where con.CourseId == cId && con.StudentId == sId
-                              select con).SingleOrDefault();
-            if(connection != null) throw new AppObjectExistsException();
-
-            var tmpCon = new StudentConnection
+            _db.StudentConnections.Add(new StudentConnection
             {
                 CourseId = cId,
                 StudentId = sId
-            };
-            _db.StudentConnections.Add(tmpCon);
-            _db.SaveChanges();
+            });
+
+            try
+            {
+                _db.SaveChanges();
+            }
+            catch (DbUpdateException e)
+            {
+                var sqliteException = e.InnerException as SqliteException;
+                // SqLite Error code 19 is for constraint violation
+                if (sqliteException == null || sqliteException.SqliteErrorCode != 19) throw;
+                if (sqliteException.Message.Trim().StartsWith("SQLite Error 19: \'FOREIGN KEY"))
+                {
+                    throw new AppObjectNotFoundException();
+                }
+                if (sqliteException.Message.Trim().StartsWith("SQLite Error 19: \'UNIQUE"))
+                {
+                    throw new AppObjectExistsException();
+                }
+                throw;
+            }
         }
 
         /// <summary>
