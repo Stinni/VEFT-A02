@@ -3,7 +3,6 @@ using System.Linq;
 using A02.Entities;
 using A02.Models;
 using A02.Services.Exceptions;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
